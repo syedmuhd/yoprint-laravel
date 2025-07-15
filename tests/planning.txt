@@ -1,0 +1,6 @@
+1. Models
+- Split the model/table for better management and data isolation (like product description, categories, etc)
+
+2. Create a service for business logic handling, this way we can reuse the same logic for console command
+
+3. Implement the import logic
