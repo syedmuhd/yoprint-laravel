@@ -9,6 +9,8 @@ use Illuminate\Foundation\Queue\Queueable;
 use Log;
 use Throwable;
 
+use App\Services\ProcessCsvService;
+
 class ProcessUpload implements ShouldQueue
 {
     use Queueable;

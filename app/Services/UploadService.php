@@ -8,6 +8,7 @@ use App\Models\Upload;
 use App\Enums\UploadStatus;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Str;
+use App\Jobs\ProcessUpload;
 
 class UploadService
 {
@@ -29,7 +30,7 @@ class UploadService
         ]);
 
         // Dispatch job
-        // ProcessUpload::dispatch($upload);
+        ProcessUpload::dispatch($upload);
 
         return $upload;
     }
