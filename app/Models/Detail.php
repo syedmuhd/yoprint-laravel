@@ -13,4 +13,10 @@ class Detail extends Model
         'piece_weight',
         'companion_styles'
     ];
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
+    }
+
 }

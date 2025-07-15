@@ -2,9 +2,6 @@
 
 namespace App\Imports;
 
-use App\Models\Product;
-use Illuminate\Support\Str;
-use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\WithLimit;
 use Maatwebsite\Excel\Row;
 use Maatwebsite\Excel\Concerns\OnEachRow;
@@ -13,6 +10,9 @@ use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Illuminate\Pipeline\Pipeline;
 
 use App\Pipelines\SanitizeFields;
+use App\Pipelines\UpsertProduct;
+use App\Pipelines\UpsertDetail;
+
 use Log;
 
 class CsvImport implements OnEachRow, WithHeadingRow, WithChunkReading, WithLimit
@@ -23,35 +23,42 @@ class CsvImport implements OnEachRow, WithHeadingRow, WithChunkReading, WithLimi
 
     public function limit(): int
     {
-        return 5;
+        return 100;
     }
 
-    // Process each for of the CSV according to the requirement
+    /**
+     * On each row of imported csv
+     */
     public function onRow(Row $row)
     {
+        // Get row as an array
         $r = $row->toArray();
 
-        if (!isset($r['unique_key']) || empty($r['unique_key'])) return;
+        // Make sure unique_key is there alive
+        if (!isset($r['unique_key']) || empty($r['unique_key']))
+            return;
 
-        Log::info($r['unique_key']);
+        // Nice to have log
+        Log::info("📥 Importing product: {$r['unique_key']}");
 
-        // Use Pipeline for predictable flow (and easy to read ofcourse!)
-        $finalData = app(Pipeline::class)
+        // Each row will get processed through pipeline
+        // Pipeline rocks, in future if we need to enhance this further (maybe filter or whatever needs to be done),
+        // just make a new pipeline class and include it here
+        app(Pipeline::class)
             ->send($r)
             ->through([
                 SanitizeFields::class,
+                UpsertProduct::class,
+                UpsertDetail::class,
             ])
             ->thenReturn();
 
-        // Insert new record, or update existing record (will implement record dirty checks)
-        Product::updateOrCreate(
-            ['unique_key' => $finalData['unique_key']],
-            $finalData
-        );
+        Log::info("✅ Imported product", []);
+
     }
 
     public function chunkSize(): int
     {
-        return 5;
+        return 100;
     }
 }
