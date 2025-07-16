@@ -14,10 +14,10 @@ services:
     environment:
       - PHP_MEMORY_LIMIT=512M
       - REDIS_HOST=redis
-      - DB_HOST=db            # <-- pastikan Laravel .env ikut ni
+      - DB_HOST=db
       - DB_PORT=3306
       - DB_USERNAME=root
-      - DB_PASSWORD=yoprint
+      - DB_PASSWORD=y0pr1nt@2025
 
   nginx:
     image: nginx:latest
@@ -49,8 +49,26 @@ services:
     volumes:
       - mysql_data:/var/lib/mysql
     environment:
-      - MYSQL_ROOT_PASSWORD=yoprint
-      - MYSQL_DATABASE=laravel
+      - MYSQL_ROOT_PASSWORD=y0pr1nt@2025
+      - MYSQL_DATABASE=yoprint
+    networks:
+      - laravel
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: laravel-phpmyadmin
+    ports:
+      - "8081:80"
+    environment:
+      - PMA_HOST=db
+      - PMA_PORT=3306
+      - PMA_USER=root
+      - PMA_PASSWORD=y0pr1nt@2025
+      - UPLOAD_LIMIT=64M
+      - PMA_ARBITRARY=1
+      - PMA_AUTO_LOGIN=true
+    depends_on:
+      - db
     networks:
       - laravel
 
