@@ -3,7 +3,9 @@ FROM php:8.4-fpm
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
     zip unzip git curl libzip-dev libonig-dev libxml2-dev libpng-dev \
-    && docker-php-ext-install pdo_mysql zip mbstring exif pcntl gd
+    && docker-php-ext-install pdo_mysql zip mbstring exif pcntl gd \
+    && pecl install redis \
+    && docker-php-ext-enable redis
 
 # Copy custom config
 COPY docker/php/php.ini /usr/local/etc/php/php.ini
@@ -15,7 +17,6 @@ RUN chmod +x /usr/local/bin/custom-entrypoint.sh
 # Set entrypoint
 ENTRYPOINT ["/usr/local/bin/custom-entrypoint.sh"]
 
-# Default command (must forward to php-fpm)
 CMD ["php-fpm"]
 
 WORKDIR /var/www/html
