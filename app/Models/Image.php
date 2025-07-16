@@ -20,4 +20,9 @@ class Image extends Model
         'front_flat_image',
         'back_flat_image',
     ];
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
+    }
 }

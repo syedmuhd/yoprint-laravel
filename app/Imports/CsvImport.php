@@ -12,18 +12,22 @@ use Illuminate\Pipeline\Pipeline;
 use App\Pipelines\SanitizeFields;
 use App\Pipelines\UpsertProduct;
 use App\Pipelines\UpsertDetail;
+use App\Pipelines\UpsertCategory;
+use App\Pipelines\UpsertColor;
+use App\Pipelines\UpsertImage;
+use App\Pipelines\UpsertMill;
+use App\Pipelines\UpsertSubcategory;
+use App\Pipelines\UpsertPricinggroup;
+use App\Pipelines\UpsertPricing;
+use App\Pipelines\UpsertSize;
+use App\Pipelines\UpsertStatus;
 
 use Log;
 
-class CsvImport implements OnEachRow, WithHeadingRow, WithChunkReading, WithLimit
+class CsvImport implements OnEachRow, WithHeadingRow, WithChunkReading
 {
     public function __construct(protected $upload)
     {
-    }
-
-    public function limit(): int
-    {
-        return 100;
     }
 
     /**
@@ -38,9 +42,6 @@ class CsvImport implements OnEachRow, WithHeadingRow, WithChunkReading, WithLimi
         if (!isset($r['unique_key']) || empty($r['unique_key']))
             return;
 
-        // Nice to have log
-        Log::info("📥 Importing product: {$r['unique_key']}");
-
         // Each row will get processed through pipeline
         // Pipeline rocks, in future if we need to enhance this further (maybe filter or whatever needs to be done),
         // just make a new pipeline class and include it here
@@ -50,15 +51,25 @@ class CsvImport implements OnEachRow, WithHeadingRow, WithChunkReading, WithLimi
                 SanitizeFields::class,
                 UpsertProduct::class,
                 UpsertDetail::class,
+                UpsertCategory::class,
+                UpsertSubcategory::class,
+                UpsertColor::class,
+                UpsertImage::class,
+                UpsertMill::class,
+                UpsertPricinggroup::class,
+                UpsertPricing::class,
+                UpsertSize::class,
+                UpsertStatus::class,
             ])
             ->thenReturn();
 
-        Log::info("✅ Imported product", []);
+        // Nice to have log
+        Log::info("Imported product: {$r['unique_key']}");
 
     }
 
     public function chunkSize(): int
     {
-        return 100;
+        return 1000; // Processing 1000 rows each time.
     }
 }

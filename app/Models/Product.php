@@ -44,6 +44,11 @@ class Product extends Model
         return $this->belongsTo(Color::class);
     }
 
+    public function image()
+    {
+        return $this->belongsTo(Image::class);
+    }
+
     public function pricing()
     {
         return $this->belongsTo(Pricing::class);

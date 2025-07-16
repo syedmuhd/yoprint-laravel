@@ -15,4 +15,15 @@ class Pricing extends Model
         'msrp',
         'map_pricing',
     ];
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
+    }
+
+    public function pricinggroup()
+    {
+        return $this->belongsTo(Pricinggroup::class);
+    }
+
 }

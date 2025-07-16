@@ -15,6 +15,8 @@ class ProcessUpload implements ShouldQueue
 {
     use Queueable;
 
+    public $timeout = 600;
+
     /**
      * Create a new job instance.
      */

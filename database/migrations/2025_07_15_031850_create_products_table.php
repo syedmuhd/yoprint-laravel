@@ -3,6 +3,7 @@
 use App\Models\Category;
 use App\Models\Color;
 use App\Models\Detail;
+use App\Models\Image;
 use App\Models\Mill;
 use App\Models\Pricing;
 use App\Models\Size;
@@ -33,6 +34,7 @@ return new class extends Migration {
             $table->foreignIdFor(Category::class)->nullable();
             $table->foreignIdFor(Subcategory::class)->nullable();
             $table->foreignIdFor(Color::class)->nullable();
+            $table->foreignIdFor(Image::class)->nullable();
             $table->foreignIdFor(Pricing::class)->nullable();
             $table->foreignIdFor(Mill::class)->nullable();
             $table->foreignIdFor(Status::class)->nullable();

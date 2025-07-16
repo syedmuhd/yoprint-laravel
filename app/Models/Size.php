@@ -10,4 +10,10 @@ class Size extends Model
         'name',
         'case_size',
     ];
+
+    public function products()
+    {
+        return $this->hasMany(Product::class);
+    }
+
 }

@@ -1527,9 +1527,10 @@
         class="flex items-center justify-center w-full transition-opacity opacity-100 duration-750 lg:grow starting:opacity-0">
         <main class="flex max-w-[335px] w-full flex-col-reverse lg:max-w-4xl lg:flex-row">
             <div id="app">
-                <h2 class="font-semibold mb-4">📤 Upload CSV File</h2>
+                <h2 class="font-semibold mb-4">Upload CSV File</h2>
 
                 <form @submit.prevent="uploadFile" enctype="multipart/form-data" class="mb-6 flex gap-4 items-center">
+                    @csrf
                     <input type="file" @change="onFileChange" class="border border-gray-300 p-2 rounded" accept=".csv">
                     <button type="submit" :disabled="isUploading || !selectedFile"
                         class="px-4 py-2 bg-red-500 text-white rounded disabled:opacity-50">
@@ -1538,21 +1539,21 @@
                     </button>
                 </form>
 
-                <h3 class="font-semibold mb-2">📁 Uploaded Files</h3>
+                <h3 class="font-semibold mb-2">Uploaded Files</h3>
 
                 <table class="w-full border-collapse text-sm">
                     <thead>
                         <tr class="bg-gray-100 dark:bg-gray-800">
-                            <th class="border px-3 py-2 text-left">Filename</th>
+                            <th class="border px-3 py-2 text-left">Time</th>
+                            <th class="border px-3 py-2 text-left">File Name</th>
                             <th class="border px-3 py-2 text-left">Status</th>
-                            <th class="border px-3 py-2 text-left">Uploaded At</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr v-for="upload in uploads" :key="upload.id" class="border-t">
+                            <td class="border px-3 py-2">@{{ upload.created_at }}</td>
                             <td class="border px-3 py-2">@{{ upload.filename }}</td>
                             <td class="border px-3 py-2">@{{ upload.status }}</td>
-                            <td class="border px-3 py-2">@{{ upload.created_at }}</td>
                         </tr>
                         <tr v-if="uploads.length === 0">
                             <td colspan="3" class="text-center text-gray-400 py-4">No uploads yet.</td>
@@ -1584,17 +1585,18 @@
                     if (!this.selectedFile) return;
 
                     this.isUploading = true;
+
                     const formData = new FormData();
                     formData.append('file', this.selectedFile);
 
                     fetch('{{ route('upload.store') }}', {
                         method: 'POST',
-                        headers: {
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                        },
-                        body: formData
+                        body: formData,
                     })
-                        .then(response => response.json())
+                        .then(response => {
+                            if (!response.ok) throw new Error('Upload failed');
+                            return response.json();
+                        })
                         .then(data => {
                             this.isUploading = false;
                             this.selectedFile = null;
@@ -1602,6 +1604,7 @@
                         })
                         .catch(error => {
                             console.error(error);
+                            alert('Upload failed: ' + error.message);
                             this.isUploading = false;
                         });
                 },
@@ -1613,6 +1616,7 @@
             }
         });
     </script>
+
 
 </body>
 

@@ -34,6 +34,9 @@ class UpsertDetail
             }
         }
 
+        // Attach product instance for next pipeline (if any)
+        $row['__product'] = $product;
+
         return $next($row);
     }
 }

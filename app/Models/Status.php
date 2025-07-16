@@ -8,6 +8,10 @@ class Status extends Model
 {
     protected $fillable = [
         'name',
-        'case_size',
     ];
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
+    }
 }

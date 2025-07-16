@@ -10,4 +10,9 @@ class Color extends Model
         'name',
         'pms_color'
     ];
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
+    }
 }
