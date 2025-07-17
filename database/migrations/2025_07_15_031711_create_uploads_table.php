@@ -14,10 +14,10 @@ return new class extends Migration {
             $table->id();
             $table->string('filename');
             $table->enum('status', [
-                'pending',
-                'processing',
-                'completed',
-                'failed'
+                'Pending',
+                'Processing',
+                'Completed',
+                'Failed'
             ])->default('pending');
             $table->timestamps();
         });
