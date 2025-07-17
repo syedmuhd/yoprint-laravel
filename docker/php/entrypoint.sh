@@ -18,6 +18,10 @@ if [ ! -d "vendor" ]; then
   composer install
 fi
 
+if [ ! -d "node_modules" ]; then
+  npm install
+fi
+
 # Run migrations if database is writable
 # php artisan config:clear
 # php artisan migrate --force || true
