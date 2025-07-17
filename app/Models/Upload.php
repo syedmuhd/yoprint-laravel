@@ -15,4 +15,13 @@ class Upload extends Model
     protected $casts = [
         'status' => UploadStatus::class,
     ];
+
+    protected $appends = [
+        'created_at_formatted',
+    ];
+
+    public function getCreatedAtFormattedAttribute(): string
+    {
+        return $this->created_at->format('Y-m-d H:i:s');
+    }
 }

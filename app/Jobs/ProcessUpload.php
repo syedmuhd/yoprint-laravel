@@ -8,6 +8,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Log;
 use Throwable;
+use App\Events\UploadStatusUpdated;
 
 use App\Services\ProcessCsvService;
 
@@ -31,12 +32,17 @@ class ProcessUpload implements ShouldQueue
     {
         try {
             $this->upload->update(['status' => UploadStatus::Processing]);
+            broadcast(new UploadStatusUpdated($this->upload));
+
             $service->handle($this->upload);
+
             $this->upload->update(['status' => UploadStatus::Completed]);
+            broadcast(new UploadStatusUpdated($this->upload));
         } catch (Throwable $e) {
             Log::error($e->getMessage());
 
             $this->upload->update(['status' => UploadStatus::Failed]);
+            broadcast(new UploadStatusUpdated($this->upload));
         }
     }
 }

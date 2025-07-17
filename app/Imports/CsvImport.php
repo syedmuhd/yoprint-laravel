@@ -25,7 +25,7 @@ use App\Pipelines\UpsertStatus;
 
 use Log;
 
-class CsvImport implements OnEachRow, WithHeadingRow, WithChunkReading, WithBatchInserts
+class CsvImport implements OnEachRow, WithHeadingRow, WithChunkReading, WithBatchInserts, WithLimit
 {
     public function __construct(protected $upload)
     {
@@ -69,13 +69,17 @@ class CsvImport implements OnEachRow, WithHeadingRow, WithChunkReading, WithBatc
 
     }
 
+    public function limit(): int {
+        return 10;
+    }
+
     public function chunkSize(): int
     {
-        return 1000; // Processing 1000 rows each time.
+        return 10; // Processing 1000 rows each time.
     }
 
     public function batchSize(): int
     {
-        return 1000;
+        return 10;
     }
 }
