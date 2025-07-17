@@ -2,6 +2,7 @@
 
 namespace App\Imports;
 
+use Maatwebsite\Excel\Concerns\WithBatchInserts;
 use Maatwebsite\Excel\Concerns\WithLimit;
 use Maatwebsite\Excel\Row;
 use Maatwebsite\Excel\Concerns\OnEachRow;
@@ -24,7 +25,7 @@ use App\Pipelines\UpsertStatus;
 
 use Log;
 
-class CsvImport implements OnEachRow, WithHeadingRow, WithChunkReading
+class CsvImport implements OnEachRow, WithHeadingRow, WithChunkReading, WithBatchInserts
 {
     public function __construct(protected $upload)
     {
@@ -64,12 +65,17 @@ class CsvImport implements OnEachRow, WithHeadingRow, WithChunkReading
             ->thenReturn();
 
         // Nice to have log
-        Log::info("Imported product: {$r['unique_key']}");
+        // Log::info("Imported product: {$r['unique_key']}");
 
     }
 
     public function chunkSize(): int
     {
         return 1000; // Processing 1000 rows each time.
+    }
+
+    public function batchSize(): int
+    {
+        return 1000;
     }
 }

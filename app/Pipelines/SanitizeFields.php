@@ -22,8 +22,6 @@ class SanitizeFields
             }
         }
 
-        Log::info("✅ Row sanitized", ['row' => $sanitized]);
-
         return $next($sanitized);
     }
 }
