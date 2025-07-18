@@ -119,33 +119,21 @@ const uploadFile = async () => {
  * Attaches WebSocket listeners to a single upload for real-time updates.
  */
 const listenToUpload = (upload) => {
-    // Don't listen to uploads that are already finished
-    if (upload.status === 'Completed' || upload.status === 'Failed') {
-        return;
-    }
-
     window.Echo.channel(`uploads.${upload.id}`)
-        // Listen for progress updates
         .listen('.ImportProgressUpdated', (e) => {
-            const index = uploads.value.findIndex(u => u.id === e.upload.id);
-            if (index !== -1) {
-                uploads.value[index].progress = e.progress;
+            // Find the upload in the array by its ID
+            const targetUpload = uploads.value.find(u => u.id === e.upload.id);
+            // If found, just update its progress
+            if (targetUpload) {
+                targetUpload.progress = e.progress;
             }
         })
-        // Listen for final status updates (Processing, Completed, Failed)
         .listen('.UploadStatusUpdated', (e) => {
-            const index = uploads.value.findIndex(u => u.id === e.upload.id);
-            if (index !== -1) {
-                // Update the status and set progress to 100% on completion
-                uploads.value[index].status = e.upload.status;
-                if (e.upload.status === 'Completed') {
-                    uploads.value[index].progress = 100;
-                }
-
-                // If the job is done (completed or failed), stop listening to this channel
-                if (e.upload.status === 'Completed' || e.upload.status === 'Failed') {
-                    window.Echo.leave(`uploads.${upload.id}`);
-                }
+            // Find the upload in the array by its ID
+            const targetUpload = uploads.value.find(u => u.id === e.upload.id);
+            // update it status.
+            if (targetUpload) {
+                targetUpload.status = e.upload.status;
             }
         });
 }

@@ -24,6 +24,7 @@ Hello there!
 5. Wait until all docker services are up & npm run build command has finished.
 
 6. Locally, run these commands, in order:
+    1. `sudo chmod -R 777 storage bootstrap/cache` (bcoz we just mount the project folder to docker, to avoid permission denied during upload)
     1. `sudo docker exec laravel-app php artisan migrate`
     2. `php artisan horizon`
     3. `php artisan reverb:start`
