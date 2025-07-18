@@ -10,7 +10,7 @@ Hello there!
 
 2. Clone this project repository, and navigate into the project directory.
 
-3. Make a new .env file from .env.example
+3. Make a new .env file from .env.example, simply `cp .env.example .env`
 
 4. Run `sudo docker compose up`. Thats it. All dependencies are already included (will auto composer install & npm install & run build): 
     - PHP 8.4
