@@ -16,7 +16,7 @@ class UploadResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'filename' => $this->original_name,
+            'filename' => $this->filename,
             'status' => $this->status,
             'created_at_formatted' => $this->created_at->format('M d, Y h:i A'),
         ];

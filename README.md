@@ -25,8 +25,8 @@ Hello there!
 
 6. Locally, run these commands, in order:
     1. `sudo docker exec laravel-app php artisan migrate`
-    2. `sudo docker exec laravel-app php artisan horizon &`
-    3. `sudo docker exec laravel-app php artisan reverb:start &`
+    2. `php artisan horizon`
+    3. `php artisan reverb:start`
 
 7. You're done! 
 

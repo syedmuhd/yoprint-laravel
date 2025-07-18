@@ -26,6 +26,7 @@ class ProcessUpload implements ShouldQueue
     {
         try {
             $this->upload->update(['status' => UploadStatus::Processing]);
+            $this->upload->refresh();
             broadcast(new UploadStatusUpdated($this->upload));
 
             $filePath = Storage::path($this->upload->file_path);
@@ -35,6 +36,7 @@ class ProcessUpload implements ShouldQueue
             $service->handle($this->upload, $totalRows, $filePath);
 
             $this->upload->update(['status' => UploadStatus::Completed]);
+            $this->upload->refresh();
             broadcast(new UploadStatusUpdated($this->upload));
         } catch (Throwable $e) {
             Log::error("Upload failed for file ID {$this->upload->id}: {$e->getMessage()}");
