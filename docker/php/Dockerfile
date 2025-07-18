@@ -1,5 +1,8 @@
 FROM php:8.4-fpm
 
+ARG UID
+ARG GID
+
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
     zip unzip git curl libzip-dev libonig-dev libxml2-dev libpng-dev \
@@ -26,6 +29,8 @@ RUN chmod +x /usr/local/bin/custom-entrypoint.sh
 
 # Set entrypoint
 ENTRYPOINT ["/usr/local/bin/custom-entrypoint.sh"]
+
+RUN usermod -u ${UID} www-data && groupmod -g ${GID} www-data
 
 CMD ["php-fpm"]
 

@@ -2,11 +2,6 @@
 
 Hello there!
 
-To simplify your testing/evaluation process, you may try this interview test project online at
-
-        https://yoprint.syedmuhd.my
-
-Or, try it locally using docker (recommended)
 
 1. Depending on your OS, install docker compose v2.
 
@@ -15,7 +10,7 @@ Or, try it locally using docker (recommended)
 
 2. Clone this project repository, and navigate into the project directory.
 
-3. Run `sudo docker compose up`. Thats it. All dependencies are already included: 
+3. Run `sudo docker compose up`. Thats it. All dependencies are already included (will auto composer install & npm install & run build): 
     - PHP 8.4
     - Composer 2
     - Npm
@@ -24,11 +19,12 @@ Or, try it locally using docker (recommended)
     - MySQL 8.0
     - phpMyAdmin
 
-4. Wait until "`[Server] /usr/sbin/mysqld: ready for connections.`" message is shown up
+4. Wait until all docker services are up & npm run build command has finished.
 
-4. Locally, run these commands:
-    1. `php artisan migrate`
-    2. `php artisan horizon`
+4. Locally, run these commands, in order:
+    1. `sudo docker exec laravel-app php artisan migrate`
+    2. `sudo docker exec laravel-app php artisan horizon &`
+    3. `sudo docker exec laravel-app php artisan reverb:start &`
 
 5. You're done! 
 

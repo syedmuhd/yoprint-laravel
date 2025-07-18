@@ -72,7 +72,7 @@ const isUploading = ref(false)
 // Fetches the initial list of uploads from the server
 const fetchUploads = async () => {
     const res = await fetch('/uploads')
-    const data = await res.json()
+    const { data } = await res.json();
     // Initialize a 'progress' property for each upload
     uploads.value = data.map(upload => ({
         ...upload,
@@ -98,13 +98,12 @@ const uploadFile = async () => {
             method: 'POST',
             body: formData,
         });
-        const newUpload = await response.json();
+        const { data: newUpload } = await response.json(); 
 
         const fileInput = document.querySelector('input[type="file"]');
         if (fileInput) fileInput.value = '';
         selectedFile.value = null;
 
-        // Add the new upload to the list and start listening for its events
         uploads.value.unshift({ ...newUpload, progress: 0 });
         listenToUpload(newUpload);
 
