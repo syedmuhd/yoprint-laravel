@@ -9,6 +9,7 @@ class Upload extends Model
 {
     protected $fillable = [
         'filename',
+        'file_path',
         'status',
     ];
 

@@ -14,22 +14,20 @@ class UploadService
 {
     public function handle(UploadedFile $file): Upload
     {
-        // Get original extension
-        $extension = $file->getClientOriginalExtension();
-
         // Generate unique filename with extension
-        $filename = 'upload_' . Str::uuid() . '.' . $extension;
+        $filename = 'upload_' . Str::uuid() . '.' . $file->getClientOriginalExtension();
 
         // Store uploaded file in storage/app/uploads with generated name
         $path = $file->storeAs('uploads', $filename);
 
         // Create upload record
         $upload = Upload::create([
-            'filename' => $path,
+            // FIX: Store the filename and the path correctly
+            'filename' => $file->getClientOriginalName(), // Store original filename for display
+            'file_path' => $path,                    // Store the actual path for processing
             'status' => UploadStatus::Pending,
         ]);
 
-        // Dispatch job
         ProcessUpload::dispatch($upload);
 
         return $upload;

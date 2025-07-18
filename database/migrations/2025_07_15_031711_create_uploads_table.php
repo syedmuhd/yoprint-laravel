@@ -13,6 +13,7 @@ return new class extends Migration {
         Schema::create('uploads', function (Blueprint $table) {
             $table->id();
             $table->string('filename');
+            $table->string('file_path')->nullable();
             $table->enum('status', [
                 'Pending',
                 'Processing',
